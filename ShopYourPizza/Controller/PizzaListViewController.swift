@@ -42,7 +42,7 @@ class PizzaListViewController: UITableViewController {
         dataTask?.cancel()
         
         let url = URL(string: "https://api.myjson.com/bins/snyji")
-        dataTask = session.dataTask(with: url!) { (data, response, error) in
+        dataTask = session.dataTask(with: url!) { [weak self] (data, response, error) in
             guard let data = data else {
                 if let errorMessage = error?.localizedDescription {
                     fatalError("Unable to load Pizza information from server - \(errorMessage)")
@@ -59,7 +59,7 @@ class PizzaListViewController: UITableViewController {
             }
             
             DispatchQueue.main.async {
-                self.categoryList = clist
+                self?.categoryList = clist
             }
             
         }
@@ -90,7 +90,7 @@ extension PizzaListViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "pizzaListCell") as! PizzaTableViewCell
-        cell.pizza = Array(categoryList!.categories!.values)[indexPath.section][indexPath.row]
+        cell.pizza = categoryValues?[indexPath.section][indexPath.row]
         return cell
     }
     
